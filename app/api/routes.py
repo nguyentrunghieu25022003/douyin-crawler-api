@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Query
 from ..services.feed import crawl_feed_videos
 from ..services.wallpaper import crawl_wallpaper_videos
+from dotenv import load_dotenv
 
 import os
-from dotenv import load_dotenv
 
 load_dotenv()
 router = APIRouter()
@@ -33,7 +33,7 @@ async def get_feed_videos(
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.get("/videos/wallpaper")
-async def get_feed_videos(
+async def get_wallpaper_videos(
     UIFID_TEMP: str,
     UIFID: str,
     cursor: int = Query(6, ge=6)

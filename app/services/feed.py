@@ -3,7 +3,7 @@ from ..utils.web_id import WebId
 from ..utils.ms_token import MsToken
 from ..utils.tt_wid import TtWid
 from ..utils.headers import init_headers
-from ..url_builder import build_douyin_feed_url
+from ..helpers.url_builder import build_douyin_feed_url
 
 def format_douyin_response(data: dict) -> list[dict]:
     videos = data.get("aweme_list", [])
@@ -12,7 +12,7 @@ def format_douyin_response(data: dict) -> list[dict]:
     for v in videos:
         video_id = v.get("aweme_id")
         video = v.get("video") or {}
-        video_url = (video.get("play_addr") or {}).get("url_list", [None])[0]
+        video_url = (video.get("play_addr") or {}).get("url_list", [None])
 
         if not video_id or not video_url:
             continue
@@ -22,7 +22,7 @@ def format_douyin_response(data: dict) -> list[dict]:
         author = v.get("author") or {}
         stats = v.get("statistics") or {}
         share = v.get("share_info") or {}
-        avatar_url = (author.get("avatar_thumb") or {}).get("url_list", [None])[0]
+        avatar_url = (author.get("avatar_thumb") or {}).get("url_list", [None])
 
         formatted.append({
             "video_id": video_id,
