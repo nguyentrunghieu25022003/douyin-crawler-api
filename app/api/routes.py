@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, Query
-from ..services.feed import crawl_feed_videos
-from ..services.wallpaper import crawl_wallpaper_videos
-from dotenv import load_dotenv
-
 import os
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from dotenv import load_dotenv
+from ..services.feed import crawl_feed_videos
+from ..services.wallpaper import crawl_wallpaper_videos, upload_and_update_video
 
 load_dotenv()
 router = APIRouter()
@@ -36,10 +36,15 @@ async def get_feed_videos(
 async def get_wallpaper_videos(
     UIFID_TEMP: str,
     UIFID: str,
-    cursor: int = Query(6, ge=6)
+    cursor: int = Query(6, ge=6),
+    background_tasks: BackgroundTasks = None
 ):
     try:
         videos = await crawl_wallpaper_videos(proxy=PROXY_URL, UIFID_TEMP=UIFID_TEMP, UIFID=UIFID, cursor=cursor)
+
+        if background_tasks:
+            for video in videos:
+                background_tasks.add_task(upload_and_update_video, video)
 
         return {
             "cursor": cursor,

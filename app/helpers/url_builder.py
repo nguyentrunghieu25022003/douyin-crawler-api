@@ -66,6 +66,8 @@ def build_douyin_feed_url(
     refresh_index: int = 1,
     count: int = 10,
     webid: str = "",
+    verifyFp: str = "",
+    fp: str = "",
     msToken: str = "",
 ) -> str:
     base = "https://www.douyin.com/aweme/v1/web/tab/feed/"
@@ -83,6 +85,8 @@ def build_douyin_feed_url(
         "is_visible": "1",
         "related_recommend": "1",
         "webid": webid,
+        "verifyFp": verifyFp,
+        "fp": fp,
         "msToken": msToken,
     }
     return build_url(base, extra)
@@ -110,5 +114,37 @@ def build_douyin_wallpaper_url(
         "verifyFp": verify_fp,
         "fp": fp,
         "msToken": msToken,
+    }
+    return build_url(base, extra)
+
+def build_douyin_vlog_url(
+    module_id: str = "3003101",
+    tag_id: str = "300216",
+    refresh_index: int = 1,
+    count: int = 20,
+    webid: str = "",
+    verifyFp: str = "",
+    fp: str = "",
+    msToken: str = "",
+    uifid: str = ""
+) -> str:
+    base = "https://www.douyin.com/aweme/v1/web/module/feed/"
+    extra = {
+        "module_id": module_id,
+        "tag_id": tag_id,
+        "count": count,
+        "refresh_index": refresh_index,
+        "refer_type": "10",
+        "refer_id": "",
+        "presented_ids": "",
+        "filterGids": "",
+        "awemePcRecRawData": '{"is_xigua_user":0,"is_client":false}',
+        "Seo-Flag": "0",
+        "install_time": "1743829679",
+        "webid": webid,
+        "verifyFp": verifyFp,
+        "fp": fp,
+        "msToken": msToken,
+        "uifid": uifid
     }
     return build_url(base, extra)

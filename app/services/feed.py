@@ -1,7 +1,9 @@
+import time
 import httpx
 from ..utils.web_id import WebId
 from ..utils.ms_token import MsToken
 from ..utils.tt_wid import TtWid
+from ..utils.verify_fp import VerifyFp
 from ..utils.headers import init_headers
 from ..helpers.url_builder import build_douyin_feed_url
 
@@ -54,6 +56,8 @@ async def crawl_feed_videos(page: int = 1, UIFID_TEMP: str = None, UIFID: str = 
     web_id = await WebId.get_web_id(headers)
     ms_token = await MsToken.get_real_ms_token(headers)
     tt_wid = await TtWid.get_tt_wid(headers)
+    ts = int(time.time() * 1000)
+    verify_fp = VerifyFp.get_verify_fp(ts)
 
     cookie = (
         f"ttwid={tt_wid};"
@@ -68,7 +72,7 @@ async def crawl_feed_videos(page: int = 1, UIFID_TEMP: str = None, UIFID: str = 
     
     headers["Cookie"] = cookie
     
-    url = build_douyin_feed_url(refresh_index=page, webid=web_id, msToken=ms_token)
+    url = build_douyin_feed_url(refresh_index=page, webid=web_id, verifyFp=verify_fp, fp=verify_fp, msToken=ms_token)
  
     async with httpx.AsyncClient(proxy=proxy, headers=headers, timeout=15) as client:
         response = await client.get(url) 
